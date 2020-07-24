@@ -11,7 +11,7 @@ $(document).ready(function() {
 	var socket = io.connect('localhost:5000');
 
 	socket.on('connect', function() {
-		socket.send('User has connected!');
+		socket.send("Connected to socket");
 	});
 
 	socket.on('message', function(msg) {
@@ -19,7 +19,8 @@ $(document).ready(function() {
 		console.log('Received message');
 	});
 
-	$('#sendbutton').on('click', function() {
+	$('#sendbutton').on('click', function(event) {
+		event.preventDefault();
 		socket.send($('#myMessage').val());
 		$('#myMessage').val('');
 	});
@@ -28,15 +29,12 @@ $(document).ready(function() {
 </script>
 
 
-<form action="http://127.0.0.1:5500/upload" method="POST" enctype="multipart/form-data">
+<form action="http://127.0.0.1:5500/upload">
 	<label for="file">File upload: </label>
 	<input type="file" name="file1"/>
 	<ul id="messages"></ul>
 	<input type="text" placeholder="type message" id="myMessage">
 	<button id="sendbutton">Send</button>
-
 </form>
-	
-
 </body>
 </html>

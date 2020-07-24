@@ -22,6 +22,10 @@ socketio = SocketIO(app)
 def home_page():
 	return "Sup"
 
+@app.route('/debug')
+def debug_page():
+	return render_template('index.html')
+
 def allowed_file(filename):
 	return '.' in filename and \
 		   filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -51,6 +55,5 @@ def handleMessage(message):
     print('Message: ' + message)
     send(message)
 
-# app.run()
 if __name__ == '__main__':
 	socketio.run(app, debug = True)
