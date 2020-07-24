@@ -12,6 +12,7 @@ $(document).ready(function() {
 
 	socket.on('connect', function() {
 		socket.send("Connected to socket");
+		socket.emit("GetText", "textplis");
 	});
 
 	socket.on('message', function(msg) {

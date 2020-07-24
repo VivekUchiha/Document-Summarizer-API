@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify, make_response
 from flask_socketio import SocketIO, emit, send
 import os
 from datetime import datetime
-
-# from ocr_core import ocr_png
+from ocr_core import getTextFromFile, SampleText
 from werkzeug.utils import secure_filename
+import hashlib, random
 
 # Folder to store and later serve the images
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static/uploads/')
@@ -42,18 +42,26 @@ def upload_page():
 			return 'No file selected'
 		if file and allowed_file(file.filename):
 			filename = secure_filename(file.filename)
-			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename + str(datetime.now())))
+			stamp = datetime.now()
+			uniqueCode = hashlib.sha256((str(stamp) + str(random.getrandbits(256))).encode('utf-8')).hexdigest()
+			print(uniqueCode)
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename + str(stamp)))
 			# extracted_text = ocr_png(UPLOAD_FOLDER + file.filename + str(datetime.now()))
 			# print(extracted_text)
-			return 'Successful'
+			return make_response(jsonify(unique_code = uniqueCode),200)
 		else:
-			return 'Invalid Format'
+			return make_response(jsonify(message = "Invalid Type"),400)
 
 #Event listener message
 @socketio.on('message')
 def handleMessage(message):
     print('Message: ' + message)
     send(message)
+
+@socketio.on('GetText')
+def handleGetText(message):
+	print('Code : ', message)
+	emit('FinalText', SampleText)
 
 if __name__ == '__main__':
 	socketio.run(app, debug = True)
