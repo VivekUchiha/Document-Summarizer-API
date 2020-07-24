@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>Test App</title>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+$(document).ready(function() {
+
+	var socket = io.connect('localhost:5000');
+
+	socket.on('connect', function() {
+		socket.send("Connected to socket");
+	});
+
+	socket.on('message', function(msg) {
+		$("#messages").append('<li>'+msg+'</li>');
+		console.log('Received message');
+	});
+
+	$('#sendbutton').on('click', function(event) {
+		event.preventDefault();
+		socket.send($('#myMessage').val());
+		$('#myMessage').val('');
+	});
+
+});
+</script>
+
+
+<form action="http://127.0.0.1:5500/upload">
+	<label for="file">File upload: </label>
+	<input type="file" name="file1"/>
+	<ul id="messages"></ul>
+	<input type="text" placeholder="type message" id="myMessage">
+	<button id="sendbutton">Send</button>
+</form>
+</body>
+</html>

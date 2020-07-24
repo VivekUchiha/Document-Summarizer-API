@@ -1,6 +1,8 @@
+from flask import Flask, render_template, request
+from flask_socketio import SocketIO, emit, send
 import os
 from datetime import datetime
-from flask import Flask, render_template, request
+
 # from ocr_core import ocr_png
 from werkzeug.utils import secure_filename
 
@@ -12,11 +14,17 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'pdf'])
 
 app = Flask(__name__)
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+socketio = SocketIO(app)
 
 @app.route('/')
 def home_page():
 	return "Sup"
+
+@app.route('/debug')
+def debug_page():
+	return render_template('index.html')
 
 def allowed_file(filename):
 	return '.' in filename and \
@@ -41,5 +49,11 @@ def upload_page():
 		else:
 			return 'Invalid Format'
 
+#Event listener message
+@socketio.on('message')
+def handleMessage(message):
+    print('Message: ' + message)
+    send(message)
 
-app.run()
+if __name__ == '__main__':
+	socketio.run(app, debug = True)
