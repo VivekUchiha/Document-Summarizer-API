@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, send
 import os
 from datetime import datetime
 
@@ -45,6 +45,11 @@ def upload_page():
 		else:
 			return 'Invalid Format'
 
+#Event listener message
+@socketio.on('message')
+def handleMessage(message):
+    print('Message: ' + message)
+    send(message)
 
 # app.run()
 if __name__ == '__main__':
