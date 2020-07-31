@@ -58,10 +58,10 @@ def handleMessage(message):
     print('Message: ' + message)
     send(message)
 
-@socketio.on('GetText')
+@socketio.on('ocr_request')
 def handleGetText(message):
 	print('Code : ', message)
-	emit('FinalText', SampleText)
+	emit('ocr_response', SampleText)
 
 if __name__ == '__main__':
-	socketio.run(app, debug = True)
+	socketio.run(app,host='0.0.0.0',port=8080, debug = True)

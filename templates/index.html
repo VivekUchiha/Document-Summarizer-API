@@ -8,17 +8,23 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
-	var socket = io.connect('localhost:5000');
+	var socket = io.connect('kamaleshkhanna.vision:8080');
 
 	socket.on('connect', function() {
 		socket.send("Connected to socket");
-		socket.emit("GetText", "textplis");
+		socket.emit("ocr_request", "Code");
 	});
 
 	socket.on('message', function(msg) {
 		$("#messages").append('<li>'+msg+'</li>');
-		console.log('Received message');
+		console.log('Received message' + msg);
 	});
+
+	socket.on('ocr_response', function(msg) {
+                $("#messages").append('<li>'+msg+'</li>');
+                console.log('Received OCR Response');
+        });
+
 
 	$('#sendbutton').on('click', function(event) {
 		event.preventDefault();
