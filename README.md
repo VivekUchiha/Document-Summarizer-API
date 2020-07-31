@@ -19,7 +19,7 @@ $ git clone https://github.com/VivekUchiha/Document-Summarizer-API.git && cd Doc
 - Activate virtual environment and start installing dependencies.
 ```
 $ pipenv shell
-$ pipenv install requirements.txt
+$ pipenv install
 ```
 
 ## Running

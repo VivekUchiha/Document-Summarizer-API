@@ -6,8 +6,8 @@ def getTextFromFile(filename):
     """
     This function will handle the core OCR processing of different file types.
     """
-    text = textract.process(filename, method='tesseract').decode("utf8")  
+    text = textract.process(filename, method='tesseract').decode('utf-8')
     return text
 
 if __name__ == '__main__':
-	print(getTextFromFile('images/sample-form.jpg'))
+	print(getTextFromFile('images/test.png'))

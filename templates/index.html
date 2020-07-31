@@ -5,10 +5,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 </head>
 <body>
+<h1> Enter secret code in box and click send. Response will appear in console</h1>
 <script type="text/javascript">
 $(document).ready(function() {
 
-	var socket = io.connect('kamaleshkhanna.vision:8080');
+	var socket = io.connect('localhost:8080');
 
 	socket.on('connect', function() {
 		socket.send("Connected to socket");
@@ -21,14 +22,15 @@ $(document).ready(function() {
 	});
 
 	socket.on('ocr_response', function(msg) {
-                $("#messages").append('<li>'+msg+'</li>');
-                console.log('Received OCR Response');
-        });
+            $("#messages").append('<li>'+ "Received ocr response " +'</li>');
+            console.log('Received OCR Response');
+			console.log(msg);
+    });
 
 
 	$('#sendbutton').on('click', function(event) {
 		event.preventDefault();
-		socket.send($('#myMessage').val());
+		socket.emit('ocr_request',$('#myMessage').val());
 		$('#myMessage').val('');
 	});
 

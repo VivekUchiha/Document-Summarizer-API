@@ -9,8 +9,6 @@ import hashlib, random
 # Folder to store and later serve the images
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static/uploads/')
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'pdf'])
 
 app = Flask(__name__)
@@ -43,11 +41,11 @@ def upload_page():
 		if file and allowed_file(file.filename):
 			filename = secure_filename(file.filename)
 			stamp = datetime.now()
-			uniqueCode = hashlib.sha256((str(stamp) + str(random.getrandbits(256))).encode('utf-8')).hexdigest()
-			print(uniqueCode)
-			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename + str(stamp)))
-			# extracted_text = ocr_png(UPLOAD_FOLDER + file.filename + str(datetime.now()))
-			# print(extracted_text)
+			uniqueCode = str(hashlib.sha256((str(stamp) + str(random.getrandbits(256))).encode('utf-8')).hexdigest()) + '.' + filename.rsplit('.', 1)[1].lower()
+			# print(uniqueCode)
+			uniqueCode = secure_filename(uniqueCode)
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'], uniqueCode))
+			# print(UPLOAD_FOLDER + str(uniqueCode))
 			return make_response(jsonify(unique_code = uniqueCode),200)
 		else:
 			return make_response(jsonify(message = "Invalid Type"),400)
@@ -61,7 +59,11 @@ def handleMessage(message):
 @socketio.on('ocr_request')
 def handleGetText(message):
 	print('Code : ', message)
-	emit('ocr_response', SampleText)
+	try:
+		extracted_text = getTextFromFile(os.path.join(UPLOAD_FOLDER + message))
+		emit('ocr_response', extracted_text)
+	except:
+		send('Invalid Code')
 
 if __name__ == '__main__':
 	socketio.run(app,host='0.0.0.0',port=8080, debug = True)
