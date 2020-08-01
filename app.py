@@ -5,6 +5,8 @@ from datetime import datetime
 from ocr_core import getTextFromFile, SampleText
 from werkzeug.utils import secure_filename
 import hashlib, random
+from text_cleaner import clean_Txt
+from topic_modelling import getTopics
 
 # Folder to store and later serve the images
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static/uploads/')
@@ -59,11 +61,14 @@ def handleMessage(message):
 @socketio.on('ocr_request')
 def handleGetText(message):
 	print('Code : ', message)
-	try:
-		extracted_text = getTextFromFile(os.path.join(UPLOAD_FOLDER + message))
-		emit('ocr_response', extracted_text)
-	except:
-		send('Invalid Code')
+	# try:
+	extracted_text = getTextFromFile(os.path.join(UPLOAD_FOLDER + message))
+	clean_text = clean_Txt(extracted_text)
+	emit('ocr_response', clean_text)
+	getTopics(clean_text)
+	# except Exception as e:
+		# print(e)
+		# send('Invalid Code')
 
 if __name__ == '__main__':
 	socketio.run(app,host='0.0.0.0',port=8080, debug = True)

@@ -18,8 +18,14 @@ def getTopics(text):
 	lda_dtf=lda.fit_transform(dtm)
 	sorting=np.argsort(lda.components_)[:,::-1]
 	features=np.array(vect.get_feature_names())
-	mglearn.tools.print_topics(topics=range(5), feature_names=features,
-	sorting=sorting, topics_per_chunk=5, n_words=10)
+	# mglearn.tools.print_topics(topics=range(5), feature_names=features,
+	# sorting=sorting, topics_per_chunk=5, n_words=10)
+	summary = []
+	for topic in range(5):
+		curr_topic = np.argsort(lda_dtf[:,topic])[::-1]
+		for i in curr_topic[:4]:
+			print(".".join(text[i].split(".")[:2]))
+			summary.append(".".join(text[i].split(".")[:2]) + "\n")
 
 if __name__ == '__main__':
 	getTopics(foo)
