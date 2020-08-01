@@ -15,6 +15,9 @@ networkx = "*"
 flask = "*"
 flask-socketio = "*"
 eventlet = "*"
+sklearn = "*"
+pandas = "*"
+mglearn = "*"
 
 [requires]
 python_version = "3.8"
