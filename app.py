@@ -47,8 +47,11 @@ def upload_page():
 			# print(uniqueCode)
 			uniqueCode = secure_filename(uniqueCode)
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], uniqueCode))
+			extracted_text = getTextFromFile(os.path.join(UPLOAD_FOLDER + uniqueCode))
+			clean_text = clean_Txt(extracted_text)
+			topics = getTopics(clean_text)
 			# print(UPLOAD_FOLDER + str(uniqueCode))
-			return make_response(jsonify(unique_code = uniqueCode),200)
+			return make_response(jsonify(unique_code = uniqueCode, extracted_text=clean_text, topics=topics),200)
 		else:
 			return make_response(jsonify(message = "Invalid Type"),400)
 
