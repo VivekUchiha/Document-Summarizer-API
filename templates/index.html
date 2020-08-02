@@ -27,6 +27,12 @@ $(document).ready(function() {
 			console.log(msg);
     });
 
+	socket.on('summary_response', function(msg) {
+            $("#messages").append('<li>'+ "Received ocr response " +'</li>');
+            console.log('Received OCR Response');
+			console.log(msg);
+    });
+
 
 	$('#sendbutton').on('click', function(event) {
 		event.preventDefault();

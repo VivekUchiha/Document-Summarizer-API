@@ -61,14 +61,15 @@ def handleMessage(message):
 @socketio.on('ocr_request')
 def handleGetText(message):
 	print('Code : ', message)
-	# try:
-	extracted_text = getTextFromFile(os.path.join(UPLOAD_FOLDER + message))
-	clean_text = clean_Txt(extracted_text)
-	emit('ocr_response', clean_text)
-	getTopics(clean_text)
-	# except Exception as e:
-		# print(e)
-		# send('Invalid Code')
+	try:
+		extracted_text = getTextFromFile(os.path.join(UPLOAD_FOLDER + message))
+		clean_text = clean_Txt(extracted_text)
+		emit('ocr_response', clean_text)
+		topics = getTopics(clean_text)
+		emit('summary_response', topics)
+	except Exception as e:
+		print(e)
+		send('Invalid Code')
 
 if __name__ == '__main__':
 	socketio.run(app,host='0.0.0.0',port=8080, debug = True)
