@@ -16,12 +16,10 @@ def func(topics, feature_names, sorting, topics_per_chunk=6,n_words=20):
 		these_topics = topics[i: i + topics_per_chunk]
 		len_this_chunk = len(these_topics)
 		for i in range(n_words):
-			topic_words.append(list(feature_names[sorting[these_topics, i]]))
-			# try:
-				# print(("{:<14}" * len_this_chunk).format(
-					# *feature_names[sorting[these_topics, i]]))
-			# except:
-				# pass
+			try:
+				topic_words.append(list(feature_names[sorting[these_topics, i]]))
+			except:
+				print("Error")
 		print("\n")
 	return topic_words
 	
